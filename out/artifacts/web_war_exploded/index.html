@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title></title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+		}
+		body,html{
+			position: fixed;
+			height: 100%;
+			width: 100%;
+
+		}
+		.map{
+			display: none;
+			height: 100%;
+			width: 100%;
+		}
+		.content{
+			z-index: -20;
+			box-shadow:0 2px 4px rgba(0,0,0,.12),0 0 6px rgba(0,0,0,.04);
+			border-radius: 5px;
+			width: 500px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			background-color: #cdd;
+			transform:translate(-50%,-50%);
+			text-align: center;
+			padding: 20px;
+		}
+		.title{
+			color: coral;
+			font-weight: 500;
+			margin-bottom: 20px;
+		}
+		#file_image{
+			height: 100%;
+			overflow: hidden;
+			max-height: 400px;
+			margin: 0 auto;
+			margin-top: 30px;
+		}
+		.btn{
+			display: inline-block;
+			line-height: 1;
+			white-space: nowrap;
+			cursor: pointer;
+			border: 1px solid;
+			-webkit-appearance: none;
+			text-align: center;
+			box-sizing: border-box;
+			outline: none;
+			margin: 20px 0;
+			transition: .1s;
+			font-weight: 500;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+			padding: 12px 25px;
+			font-size: 14px;
+			border-radius: 4px;
+			color: #67c23a;
+			background: #f0f9eb;
+			border-color: #c2e7b0;
+		}
+		.btn:hover{
+			color: #fff;
+			background-color: #67c23a;
+			border-color: #67c23a;
+		}
+		.load{
+			display: none;
+			position: fixed;
+			height: 100%;
+			width: 100%;
+			background-color: #000;
+			opacity: 0.9;
+			z-index: 999;
+
+		}
+		.load img{
+			width: 55px;
+			position: absolute;
+			top:50%;
+			left:50%;
+			transform:translate(-50%,-50%);
+			animation:mymove 3s infinite;
+			/* Safari and Chrome */
+			-webkit-animation:mymove 3s infinite;
+		}
+		.Message{
+			overflow: auto;
+			display: none;
+			opacity: 0.9;
+			width: 100%;
+			height: 100%;
+			z-index:100;
+			border-spacing: inherit;
+			border-style: initial;
+			margin: 0 auto;
+			box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+			border-radius: 5px;
+			background-color: #ccc;
+			text-align: center;
+			color: #000;
+			font-size: 14px;
+		}
+		.tablecontent{
+			padding: 20px 0;
+			width: 100%;
+		}
+		.tablecontent table{
+			border: 1px solid #000;
+			box-sizing: border-box;
+			margin: 0 auto;
+			box-shadow: 0 2px 4px rgba(0,0,0,.12), 0 0 6px rgba(0,0,0,.04);
+			border-radius: 5px;
+			width: 80%;
+			background-color: #000;
+			text-align: center;
+		}
+		.tablecontent td{
+			background-color: #ccdddd;
+			line-height: 2em;
+			margin-left: 20px;
+		}
+		.tablecontent th{
+			position: relative;
+			color: #000000;
+			font-size: 1.5em;
+			line-height: 2em;
+			background-color: coral;
+		}
+		.close{
+			width: 20px;
+			margin: 8px;
+			float: right;
+		}
+		.tablecontent tr:last-child{
+			border-left-radius: 5px;
+		}
+		.tablecontent td:first-child{
+			margin-left: 0;
+		}
+		.tablecontent td:nth-of-type(even){
+			background-color: rosybrown;
+			margin-left: 10px;
+			margin-left: 0;
+		}
+		.mapbtn{
+
+			color: blue;
+			position: absolute;
+			left: 0;
+			vertical-align: middle;
+			font-size: 12px;
+			cursor: pointer;
+			text-decoration: underline;
+			display: none;
+		}
+		.mapbtn svg{
+			height: 2em;
+			vertical-align: middle;
+		}
+		#wz{
+			color: red;
+			font-weight: 900;
+			font-size: 1.3em;
+		}
+		@keyframes mymove
+		{
+			from {transform: rotate(0deg);
+				-ms-transform: rotate(0deg); /* IE 9 */
+				-webkit-transform: rotate(0deg); /* Safari and Chrome */}
+			to {transform: rotate(360deg);
+				-ms-transform: rotate(360deg); /* IE 9 */
+				-webkit-transform: rotate(360deg); /* Safari and Chrome */}
+		}
+
+		@-webkit-keyframes mymove /* Safari and Chrome */
+		{
+			from {transform: rotate(0deg);
+				-ms-transform: rotate(0deg); /* IE 9 */
+				-webkit-transform: rotate(0deg); /* Safari and Chrome */}
+			to {transform: rotate(360deg);
+				-ms-transform: rotate(360deg); /* IE 9 */
+				-webkit-transform: rotate(360deg); /* Safari and Chrome */}
+		}
+		::-webkit-scrollbar-track-piece {
+		background-color:#f8f8f8;
+		}
+		::-webkit-scrollbar {
+		width:4px;
+			height:9px;
+		}
+		::-webkit-scrollbar-thumb {
+		background-color:#dddddd;
+			background-clip:padding-box;
+			min-height:28px;
+		}
+		::-webkit-scrollbar-thumb:hover {
+			background-color:#bbb;
+		}
+	</style>
+
+</head>
+<body>
+<div class="load">
+	<img src="img/icon_loading.png" alt="加载中" />
+</div>
+
+<div class="content">
+	<div>
+		<h1 class="title"> 获取 图片 信息
+		</h1>
+		<div id="file_image"></div>
+		<button class="btn">确认</button>
+	</div>
+</div>
+
+<div class="Message">
+	<div class="tablecontent">
+		<table>
+			<thead>
+				<tr>
+					<th colspan="4">
+						<div class="mapbtn">
+							<svg class="icon icon-dingwei" width="48px" height="48.00px" viewBox="0 0 1024 1024" version="1.1">
+								<path d="M511.998 1024l-19.096-19.618c-15.48-15.925-379.354-392.222-379.354-605.929C113.542 178.749 292.294 0 511.998 0c219.705 0 398.454 178.749 398.454 398.453 0 213.707-363.874 590.004-379.353 605.929L511.998 1024zM511.998 53.288c-190.329 0-345.167 154.839-345.167 345.166 0 166.34 270.153 468.028 345.167 548.587 75.016-80.555 345.169-382.247 345.169-548.587C857.165 208.125 702.325 53.288 511.998 53.288zM511.998 581.367c-103.814 0-188.298-84.47-188.298-188.298 0-103.829 84.481-188.304 188.298-188.304 103.818 0 188.275 84.474 188.275 188.302C700.273 496.896 615.815 581.367 511.998 581.367zM511.998 258.055c-74.439 0-135.011 60.572-135.011 135.012 0 74.438 60.571 135.011 135.011 135.011 74.442 0 134.987-60.573 134.987-135.012C646.985 318.627 586.438 258.055 511.998 258.055z"></path></svg>
+							此图片有位置信息，点击显示位置！
+						</div>
+						图片信息
+						<img src="img/icon-close.png" class="close" id="close_message" />
+					</th>
+				</tr>
+			</thead>
+			<tbody id="table_x">
+
+			</tbody>
+		</table>
+	</div>
+
+	<div  style="width: 100%;position: absolute;height: 30px;line-height: 30px;z-index: 999;background: antiquewhite;display: none" id="wy">
+		<span id="wz">位置：</span>
+		<img src="img/icon-close.png" class="close"  style="margin:5px;margin-right: 20px" id="mapclose" />
+	</div>
+	<div class="map" id="container">
+	</div>
+</div>
+
+
+<script type="text/javascript" src="js/jquery-3.3.1.min.js" ></script>
+<script type="text/javascript" src="js/upload.js" ></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=qkwcApQmdZAgDVS7IGzSvsrGLWKlqBM8"></script>
+<script type="text/javascript">
+    if(top != self){
+        top.location=self.location;
+    }else{
+        var url = location.search;
+        if(url){
+            var old_url = window.location.href;
+            var new_url = old_url.substring(0, old_url.indexOf('?'));
+            self.location = new_url;
+        }
+    }
+
+
+    var file;
+    var load = $(".load");
+    var message =  $(".Message");
+    var dragImgUpload = new DragImgUpload("#file_image",{
+        callback:function (files) {
+            file = files[0];
+        }
+    });
+
+    $("#close_message").click(function () {
+        message.css("display","none");
+		$("#table_x").html("");
+    })
+
+	$("#mapclose").click(function () {
+        $(".tablecontent").show();
+        $(".map").hide();
+        $("#wy").hide();
+    })
+
+
+    $(".btn").click(function(){
+        if(file==null){
+            alert("请先选择文件！");
+        }else{
+            load.css("display","block");
+            run(file,function(data){
+                var sj = {"data":data};
+                $.ajax({
+                    url:location.href+"/imageMessage",
+                    type:"post",
+                    data:{
+                        data:data,
+                    },
+                    success:function(data,text){
+                        var count = 0;
+                        var s;
+                        for (var key in data) {
+                           message.css("display","block");
+                            if(count == 0){
+                                s +="<tr> <td>"+key +"</td> <td>"+data[key] +"</td>";
+                                count=1;
+                            }else{
+                                s += "<td>"+key+"</td> <td>"+  data[key] +"</td> </tr>";
+                                count=0;
+                            }
+                        }
+                        $("#table_x").append(s);
+                         if(data.纬度x != null && data.经度x != null){
+							$(".mapbtn").css("display","inline-block").click(function () {
+                                    baidymap(data.经度x,data.纬度x);
+                                 $(".tablecontent").hide();
+                                 $("#container").show();
+                                 $("#wy").show();
+                             });
+						 }
+                        load.css("display","none");
+                    },
+                    error:function (xml, text, error) {
+                        alert("出现未知错误");
+                    }
+
+                })
+            });
+        }
+    })
+
+    function baidymap(j,w){
+        var map = new BMap.Map("container");
+        var point = new BMap.Point(j,w);  // 创建点坐标
+        map.centerAndZoom(point,16);
+        map.enableScrollWheelZoom(true);
+        var marker = new BMap.Marker(point);        // 创建标注
+        map.addOverlay(marker);
+        map.panTo(point);
+        $("#container").click(function () {
+            map.panTo(point);
+        })
+
+		$.ajax({
+			url:"http://api.map.baidu.com/geocoder/v2/?callback=renderReverse&location="+w+","+j+"&output=json&pois=1&ak=qkwcApQmdZAgDVS7IGzSvsrGLWKlqBM8",
+			type:"get",
+			dataType:"jsonp",
+            success:function (data,qwe) {
+			    if(data.status == 0){
+			        var s =data.result.formatted_address;
+			        $("#wz").html("位置为："+s);
+				}
+            },
+		})
+
+    }
+
+    function run(file, get_data) {
+        if (typeof (FileReader) === 'undefined') {
+            alert("抱歉，你的浏览器不支持 FileReader，不能将图片转换为Base64，请使用现代浏览器操作！");
+        } else {
+            try {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    get_data(this.result);
+                }
+                reader.readAsDataURL(file);
+            } catch (e) {
+                alert('图片转Base64出错啦！' + e.toString())
+            }
+        }
+    }
+
+
+
+</script>
+</body>
+</html>
